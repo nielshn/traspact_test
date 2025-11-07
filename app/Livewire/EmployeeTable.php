@@ -4,8 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Employee;
-use App\Models\Unit;
+use App\Models\{Employee, Unit};
 
 class EmployeeTable extends Component
 {
@@ -13,26 +12,64 @@ class EmployeeTable extends Component
 
     public $search = '';
     public $unit_id = '';
+
+    // temporary input sebelum diklik “Cari”
+    public $tempSearch = '';
+    public $tempUnitId = '';
+
+    public $allUnits = [];
     protected $paginationTheme = 'tailwind';
 
-    public function updatingSearch()
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'unit_id' => ['except' => ''],
+    ];
+
+    public function mount()
     {
+        $this->allUnits = Unit::orderBy('name')->get();
+
+        // Sync nilai awal
+        $this->tempSearch = $this->search;
+        $this->tempUnitId = $this->unit_id;
+    }
+
+    public function getHasPendingFiltersProperty()
+    {
+        return $this->tempSearch !== $this->search || $this->tempUnitId !== $this->unit_id;
+    }
+
+    public function applyFilters()
+    {
+        $this->search = $this->tempSearch;
+        $this->unit_id = $this->tempUnitId;
+        $this->resetPage();
+    }
+
+    public function clearFilters()
+    {
+        $this->reset(['search', 'unit_id', 'tempSearch', 'tempUnitId']);
         $this->resetPage();
     }
 
     public function render()
     {
         $query = Employee::with(['unit', 'position', 'rank', 'religion'])
-            ->when($this->search, fn($q) =>
-            $q->where('first_name', 'like', "%{$this->search}%")
-                ->orWhere('nip', 'like', "%{$this->search}%"))
-            ->when($this->unit_id, fn($q) =>
-            $q->where('unit_id', $this->unit_id))
+            ->when($this->search, function ($q) {
+                $s = '%' . $this->search . '%';
+                $q->where(function ($qq) use ($s) {
+                    $qq->where('first_name', 'like', $s)
+                        ->orWhere('last_name', 'like', $s)
+                        ->orWhere('nip', 'like', $s)
+                        ->orWhere('phone', 'like', $s);
+                });
+            })
+            ->when($this->unit_id, fn($q) => $q->where('unit_id', (int)$this->unit_id))
             ->orderBy('first_name');
 
         return view('livewire.employee-table', [
             'employees' => $query->paginate(10),
-            'units' => Unit::with('children')->whereNull('parent_id')->get(),
+            'allUnits'  => $this->allUnits,
         ])->layout('layouts.app');
     }
 }

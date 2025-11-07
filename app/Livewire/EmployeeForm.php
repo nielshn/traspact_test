@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\{Employee, Unit, Position, Rank, Religion};
+use Illuminate\Database\QueryException;
 
 class EmployeeForm extends Component
 {
@@ -28,12 +29,6 @@ class EmployeeForm extends Component
         'npwp' => '',
     ];
 
-    protected $rules = [
-        'form.first_name' => 'required|string',
-        'form.gender' => 'required|in:L,P',
-        'photo' => 'nullable|image|max:2048',
-    ];
-
     public function mount($employee = null)
     {
         if ($employee) {
@@ -41,27 +36,51 @@ class EmployeeForm extends Component
                 ? Employee::findOrFail($employee)
                 : $employee;
 
-            $this->form = $this->employee->only(array_keys($this->form));
+            foreach ($this->form as $key => $val) {
+                $this->form[$key] = $this->employee->{$key};
+            }
         }
     }
 
     public function save()
     {
-        $validated = $this->validate()['form'];
-
-        if ($this->photo) {
-            $validated['photo_path'] = $this->photo->store('employee_photos', 'public');
-        }
-
+        // Siapkan rules dinamis untuk validasi NIP unik
+        $nipRule = 'nullable|string|unique:employees,nip';
         if ($this->employee && $this->employee->exists) {
-            $this->employee->update($validated);
-            session()->flash('success', 'Data pegawai berhasil diperbarui.');
-        } else {
-            Employee::create($validated);
-            session()->flash('success', 'Data pegawai berhasil ditambahkan.');
+            $nipRule .= ',' . $this->employee->id; // pengecualian untuk dirinya sendiri
         }
 
-        return redirect()->route('employees.index');
+        $validated = $this->validate([
+            'form.nip' => $nipRule,
+            'form.first_name' => 'required|string',
+            'form.gender' => 'required|in:L,P',
+            'photo' => 'nullable|image|max:2048',
+        ])['form'];
+
+        try {
+            // Upload foto jika ada
+            if ($this->photo) {
+                $validated['photo_path'] = $this->photo->store('employee_photos', 'public');
+            }
+
+            // Simpan data (update atau create)
+            if ($this->employee && $this->employee->exists) {
+                $this->employee->update($validated);
+                session()->flash('success', 'Data pegawai berhasil diperbarui.');
+            } else {
+                Employee::create($validated);
+                session()->flash('success', 'Data pegawai berhasil ditambahkan.');
+            }
+
+            return redirect()->route('employees.index');
+        } catch (QueryException $e) {
+            // Tangani error duplikat NIP
+            if ($e->getCode() == 23000) {
+                $this->addError('form.nip', 'NIP ini sudah terdaftar pada pegawai lain.');
+            } else {
+                session()->flash('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
+            }
+        }
     }
 
     public function render()

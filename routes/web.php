@@ -13,13 +13,14 @@ Route::get('/', function () {
 // Middleware auth
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard → tampil daftar pegawai via Livewire
     Route::get('/dashboard', EmployeeTable::class)->name('dashboard');
-
-    // CRUD Livewire Pages
     Route::get('/employees', EmployeeTable::class)->name('employees.index');
     Route::get('/employees/create', EmployeeForm::class)->name('employees.create');
     Route::get('/employees/{employee}/edit', EmployeeForm::class)->name('employees.edit');
+
+    // cetak PDF
+    Route::get('/employees/print', [EmployeeController::class, 'print'])
+        ->name('employees.print');
 
     // Tambahan untuk REST Controller (store, update, destroy, print)
     Route::resource('employees', EmployeeController::class)
@@ -29,9 +30,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'update' => 'employees.update',
             'destroy' => 'employees.destroy',
         ]);
-
-    // Cetak PDF
-    Route::get('/employees/print', [EmployeeController::class, 'print'])->name('employees.print');
 
     // Profile (dari Breeze)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

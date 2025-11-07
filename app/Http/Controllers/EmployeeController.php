@@ -14,25 +14,51 @@ use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
+    // public function index(Request $request)
+    // {
+    //     $q = Employee::with(['unit', 'position', 'rank', 'religion']);
+    //     if ($request->search) {
+    //         $search = $request->search;
+    //         $q->where(function ($qq) use ($search) {
+    //             $qq->where('first_name', 'like', "%{$search}%")
+    //                 ->orWhere('last_name', 'like', "%{$search}%")
+    //                 ->orWhere('nip', 'like', "%{$search}%")
+    //                 ->orWhere('phone', 'like', "%{$search}%");
+    //         });
+    //     }
+    //     if ($request->unit_id) {
+    //         $q->where('unit_id', $request->unit_id);
+    //     }
+    //     $employees = $q->orderBy('first_name')->paginate(10)->withQueryString();
+    //     $units = Unit::with('children')->whereNull('parent_id')->get();
+    //     return view('employees.index', compact('employees', 'units'));
+    // }
     public function index(Request $request)
     {
-        $q = Employee::with(['unit', 'position', 'rank', 'religion']);
-        if ($request->search) {
-            $search = $request->search;
-            $q->where(function ($qq) use ($search) {
-                $qq->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('nip', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%");
+        $query = Employee::query()->with(['unit', 'position', 'rank', 'religion']);
+
+        if ($request->filled('search')) {
+            $s = '%' . $request->search . '%';
+            $query->where(function ($q) use ($s) {
+                $q->where('first_name', 'like', $s)
+                    ->orWhere('last_name', 'like', $s)
+                    ->orWhere('nip', 'like', $s)
+                    ->orWhere('phone', 'like', $s);
             });
         }
-        if ($request->unit_id) {
-            $q->where('unit_id', $request->unit_id);
+
+        if ($request->filled('unit_id')) {
+            $query->where('unit_id', $request->unit_id);
         }
-        $employees = $q->orderBy('first_name')->paginate(10)->withQueryString();
-        $units = Unit::with('children')->whereNull('parent_id')->get();
-        return view('employees.index', compact('employees', 'units'));
+
+        $employees = $query->orderByDesc('created_at')->paginate(10);
+
+        return view('employees.index', [
+            'employees' => $employees,
+            'units' => \App\Models\Unit::with('children')->whereNull('parent_id')->get(),
+        ]);
     }
+
 
     public function create()
     {
@@ -108,12 +134,17 @@ class EmployeeController extends Controller
 
     public function destroy(Employee $employee)
     {
-        if ($employee->photo_path) {
-            Storage::disk('public')->delete($employee->photo_path);
+        try {
+            if ($employee->photo_path) {
+                Storage::disk('public')->delete($employee->photo_path);
+            }
+            $employee->delete();
+            return back()->with('success', 'Pegawai berhasil dihapus.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus pegawai: ' . $e->getMessage());
         }
-        $employee->delete();
-        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
     }
+
 
     public function show(Employee $employee)
     {
@@ -132,7 +163,7 @@ class EmployeeController extends Controller
         $pdf = Pdf::loadView('employees.print', [
             'employees' => $employees,
             'printedAt' => now()->format('d F Y, H:i')
-        ])->setPaper('A4', 'portrait');
+        ])->setPaper('A4', 'landscape');
 
         return $pdf->stream('daftar_pegawai.pdf');
     }
