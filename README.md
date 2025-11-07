@@ -1,66 +1,210 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🧩 Employee Management System — PT. TRASPAC MAKMUR SEJAHTERA
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern and interactive **Employee Management System** built with **Laravel 11**, **Livewire 3**, and **TailwindCSS**, designed for managing employee data with features like dynamic filtering, hierarchical unit structure (tree), responsive table grid, file upload, PDF printing, and dark mode support.
 
-## About Laravel
+![Laravel](https://img.shields.io/badge/Laravel-11-red?style=flat-square&logo=laravel)
+![Livewire](https://img.shields.io/badge/Livewire-3-purple?style=flat-square)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-blue?style=flat-square)
+![PHP](https://img.shields.io/badge/PHP-%5E8.2-blueviolet?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Project Overview
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+This system was built as a part of an academic project to meet several key software engineering and UI/UX requirements:
 
-## Learning Laravel
+✅ **CRUD operations** for employee management
+✅ **Tree component** for hierarchical unit structure (Unit Kerja)
+✅ **Data table** with pagination, search, and filters
+✅ **Combo box**, **radio buttons**, and **file upload**
+✅ **Dark/light mode support** using Laravel Breeze layout
+✅ **PDF export/print feature** with company logo
+✅ **SweetAlert confirmation dialogs**
+✅ **Responsive layout** with Tailwind grid & flex utilities
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🏗️ Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Layer                | Technology                       |
+| -------------------- | -------------------------------- |
+| **Backend**          | Laravel 11                       |
+| **Frontend**         | Livewire 3 + TailwindCSS         |
+| **UI Theme**         | Laravel Breeze (Dark/Light Mode) |
+| **PDF Export**       | DOMPDF / Barryvdh Laravel-Dompdf |
+| **Icons**            | Heroicons (Blade Components)     |
+| **JS Interactivity** | Alpine.js + SweetAlert2          |
+| **Database**         | MySQL / MariaDB                  |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 📂 Project Structure
 
-### Premium Partners
+```
+app/
+ ├── Http/Livewire/Employees/        # Livewire components for employee CRUD & filtering
+ ├── Models/                         # Eloquent models (Employee, Unit, Position, Rank, etc.)
+ └── Http/Controllers/               # (Optional) if hybrid approach with controller routes
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+resources/
+ ├── views/
+ │   ├── employees/                  # Blade templates for employee pages
+ │   │   ├── index.blade.php         # Employee list with tree + table
+ │   │   ├── create.blade.php        # Employee create form
+ │   │   ├── edit.blade.php          # Employee edit form
+ │   │   └── partials/
+ │   │       └── unit-tree.blade.php # Recursive partial for hierarchical units
+ │   └── pdf/
+ │       └── employees.blade.php     # PDF layout for employee print
+ └── components/                     # Reusable Blade components
 
-## Contributing
+public/
+ ├── logotraspac.png                 # Company logo for header & PDF
+ └── images/no-photo.png             # Default employee photo placeholder
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## ⚙️ Installation Guide
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Follow these steps to run the project locally:
 
-## Security Vulnerabilities
+### 1⃣ Clone the Repository
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+git clone https://github.com/yourusername/employee-management-system.git
+cd employee-management-system
+```
 
-## License
+### 2⃣ Install Dependencies
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+composer install
+npm install && npm run build
+```
+
+### 3⃣ Copy Environment File
+
+```bash
+cp .env.example .env
+```
+
+### 4⃣ Configure Database
+
+Edit your `.env` file:
+
+```env
+DB_DATABASE=employee_db
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Then run:
+
+```bash
+php artisan migrate --seed
+```
+
+_(Includes seeders for unit, position, and rank data)_
+
+### 5⃣ Run the Application
+
+```bash
+php artisan serve
+```
+
+Visit [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 🧠 Key Features
+
+### 🌳 Hierarchical Tree (Unit Kerja)
+
+- Interactive tree/slider showing the organization’s structure.
+- Expand/collapse child units dynamically (Alpine.js).
+- Fully scrollable horizontal tree layout (responsive).
+
+### 📋 Employee Data Table
+
+- Paginated and searchable list of employees.
+- Filtering by name, NIP, unit, and other attributes.
+- Integrated with Livewire for real-time updates.
+
+### 🧻 PDF Printing
+
+- Printable PDF with company logo, formatted headers, and employee details.
+- Supports long tables and multi-page export.
+
+### 🧑‍💼 CRUD Operations
+
+- Create, edit, and delete employee records with Livewire modal forms.
+- File upload (photo) with preview and fallback image.
+
+### 🌙 Dark Mode Support
+
+- Seamlessly switch between light/dark themes using Laravel Breeze.
+
+### ⚠️ SweetAlert Integration
+
+- Confirmation dialog for delete actions.
+- Flash messages for success/error alerts with Alpine transitions.
+
+---
+
+## 🧐 System Requirements
+
+| Component | Version |
+| --------- | ------- |
+| PHP       | >= 8.2  |
+| Composer  | >= 2.5  |
+| Node.js   | >= 18   |
+| MySQL     | >= 5.7  |
+| Laravel   | 11.x    |
+| Livewire  | 3.x     |
+
+---
+
+## 🧠 Developer Notes
+
+This project implements:
+
+- **Repository-Service pattern** (for clean business logic separation)
+- **Livewire-only approach** for most CRUD features (no page reloads)
+- **Component-based Blade structure** for modular development
+
+The application layout and component styling follow **Tailwind utility-first design**, ensuring consistency and reusability.
+
+---
+
+## 🖼️ Preview
+
+| Dashboard                                                                               | Tree Structure                                                                            | PDF Export                                                              |
+| --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| ![Dashboard Screenshot](https://via.placeholder.com/300x180.png?text=Dashboard+Preview) | ![Tree Structure Screenshot](https://via.placeholder.com/300x180.png?text=Tree+Structure) | ![PDF Preview](https://via.placeholder.com/300x180.png?text=PDF+Output) |
+
+---
+
+## 👨‍💻 Author
+
+**Daniel Siahaan**
+Machine Learning & Web Developer
+
+- 💼 [LinkedIn](https://www.linkedin.com/in/nielshn)
+- 💻 [GitHub](https://github.com/nielshn)
+- ✉️ [dsiahaan581@gmail.com](mailto:dsiahaan581@gmail.com)
+- 📱 +62 856 6830 5160
+
+---
+
+## 📜 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+## ⭐ Contributing
+
+Pull requests are welcome!
+For major changes, please open an issue first to discuss what you would
