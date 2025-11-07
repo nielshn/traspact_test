@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SISKO Text Tool — Count / Replace / Sort (Split Files)</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>SISKO Text Tool — Count · Replace · Sort</h1>
+
+    <div class="grid">
+      <section class="card">
+        <label for="article">Artikel (bisa diedit)</label>
+        <textarea id="article" spellcheck="true"></textarea>
+        <div class="row">
+          <button id="load-article">Muat Artikel Contoh</button>
+          <button id="clear-article" class="secondary">Bersihkan</button>
+          <button id="copy-article" class="secondary">Salin ke clipboard</button>
+        </div>
+        <small class="muted">Artikel bawaan memuat teks soal.</small>
+      </section>
+
+      <section class="card">
+        <label>Pencarian Kata (whole-word, case-insensitive)</label>
+        <div class="controls">
+          <input type="text" id="count-word" placeholder="Masukkan kata, mis. teknologi" />
+          <div class="horizontal">
+            <button id="btn-count">Hitung</button>
+            <button id="btn-count-ctx" class="secondary">Hitung + Tampilkan Konteks</button>
+          </div>
+        </div>
+        <div class="result" id="count-result">Jumlah: —</div>
+      </section>
+
+      <section class="card">
+        <label>Penggantian Kata (whole-word, case-insensitive)</label>
+        <div class="controls">
+          <input type="text" id="replace-old" placeholder="Kata lama (mis. adalah)" />
+          <input type="text" id="replace-new" placeholder="Kata baru (mis. ialah)" />
+        </div>
+
+        <div class="row" style="align-items:center;margin-top:8px">
+          <label style="font-weight:400">
+            <input type="checkbox" id="preserve-case" /> Pertahankan kapitalisasi (AllCaps/Title/First)
+          </label>
+          <label style="font-weight:400;margin-left:8px">
+            <input type="checkbox" id="replace-preview-only" checked /> Tampilkan preview (jangan terapkan otomatis)
+          </label>
+          <button id="btn-replace">Ganti</button>
+        </div>
+
+        <label style="margin-top:10px">Hasil (preview)</label>
+        <div class="result" id="replace-result" style="min-height:120px;">—</div>
+
+        <div class="row" style="margin-top:8px">
+          <button id="apply-replace" class="secondary">Terapkan ke textarea</button>
+          <button id="save-replace" class="secondary">Unduh hasil .txt</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <label>Pengurutan Kata & Frekuensi</label>
+        <div class="controls">
+          <select id="sort-mode">
+            <option value="unique">Kata unik terurut (a → z)</option>
+            <option value="all">Semua token terurut (termasuk duplikat)</option>
+          </select>
+
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="number" id="top-n" min="1" value="20" style="width:90px" />
+            <button id="btn-sort">Urutkan</button>
+            <button id="btn-top" class="secondary">Tampilkan Frekuensi Top N</button>
+          </div>
+        </div>
+
+        <label style="margin-top:10px">Stopwords / Ignore-list (pisahkan dengan koma atau baris baru)</label>
+        <textarea id="stopwords" placeholder="mis: dan, di, yang, untuk" style="min-height:60px"></textarea>
+
+        <label style="margin-top:10px">Output</label>
+        <div class="result" id="sort-result" style="min-height:120px;">—</div>
+
+        <div class="row" style="margin-top:8px">
+          <button id="download-freq" class="secondary">Unduh frekuensi CSV</button>
+        </div>
+      </section>
+    </div>
+
+    <footer style="margin-top:18px" class="muted">
+      Built for Technical Test — Simple client-side tool.
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
