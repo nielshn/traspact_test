@@ -178,14 +178,6 @@ The application layout and component styling follow **Tailwind utility-first des
 
 ---
 
-## 🖼️ Preview
-
-| Dashboard                                                                               | Tree Structure                                                                            | PDF Export                                                              |
-| --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| ![Dashboard Screenshot](https://via.placeholder.com/300x180.png?text=Dashboard+Preview) | ![Tree Structure Screenshot](https://via.placeholder.com/300x180.png?text=Tree+Structure) | ![PDF Preview](https://via.placeholder.com/300x180.png?text=PDF+Output) |
-
----
-
 ## 👨‍💻 Author
 
 **Daniel Siahaan**
